@@ -26,13 +26,15 @@ namespace UsersApi.Features.User
                 return Created("", id);
             }
             catch (InvalidParameterException ex)
-            { 
-                return BadRequest($"{ex.ModuleName}: {ex.Message}");
+            {
+                ModelState.AddModelError(ex.ModuleName, ex.Message);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                ModelState.AddModelError(nameof(CreateUser), ex.Message);
             }
+
+            return BadRequest(ProblemDetailsFactory.CreateValidationProblemDetails(HttpContext, ModelState));
         }
 
         [HttpGet("{id}")]
@@ -53,8 +55,10 @@ namespace UsersApi.Features.User
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                ModelState.AddModelError(nameof(GetUser), ex.Message);
             }
+
+            return BadRequest(ProblemDetailsFactory.CreateValidationProblemDetails(HttpContext, ModelState));
         }
 
         [HttpGet("list")]
@@ -62,11 +66,25 @@ namespace UsersApi.Features.User
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetActiveUsers()
         {
-            var users = await _userService.GetActiveUsers();
-            return Ok(users);
+            try
+            {
+                var users = await _userService.GetActiveUsers();
+                return Ok(users);
+            }
+            catch (Exception ex) 
+            {
+                ModelState.AddModelError(nameof(GetActiveUsers), ex.Message);
+            }
+
+            return BadRequest(ProblemDetailsFactory.CreateValidationProblemDetails(HttpContext, ModelState));
+           
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
             try
@@ -80,8 +98,10 @@ namespace UsersApi.Features.User
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                ModelState.AddModelError(nameof(GetActiveUsers), ex.Message);
             }
+
+            return BadRequest(ProblemDetailsFactory.CreateValidationProblemDetails(HttpContext, ModelState));
         }
 
         [HttpPut("{id}")]
@@ -95,20 +115,21 @@ namespace UsersApi.Features.User
             {
                 var user = await _userService.EditUser(id, request);
                 return Ok(user);
-            }
-
-            catch (InvalidParameterException ex)
-            {
-                return BadRequest($"{ex.ModuleName}: {ex.Message}");
-            }
+            }            
             catch (RecordNotFoundException ex)
             {
                 return NotFound($"{ex.RecordName} : {ex.Message}");
             }
+            catch (InvalidParameterException ex)
+            {
+                ModelState.AddModelError(ex.ModuleName, ex.Message);
+            }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                ModelState.AddModelError(nameof(EditUser), ex.Message);
             }
+
+            return BadRequest(ProblemDetailsFactory.CreateValidationProblemDetails(HttpContext, ModelState));
         }
     }
 }

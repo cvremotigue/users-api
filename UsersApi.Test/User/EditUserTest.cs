@@ -12,7 +12,7 @@ namespace UsersApi.Test.User
     public class EditUserTest(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
     {
         [Fact]
-        public async Task GivenEditUser_UserExists_ReturnNoContent()
+        public async Task GivenEditUser_UserExists_ReturnOk()
         {
             var factoryWithMockService = GetFactoryWithMockService();
             var client = factoryWithMockService.CreateClient();
@@ -20,6 +20,7 @@ namespace UsersApi.Test.User
             var dataSeeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
             dataSeeder.Cleanup();
             var id = dataSeeder.SeedUser();
+
             var request = new EditUserRequest()
             {
                 Birthdate = new DateTime(1987, 01, 01),
@@ -36,15 +37,13 @@ namespace UsersApi.Test.User
             result.Should().NotBeNull();
             result!.FirstName.Should().Be(request.FirstName);
             result!.LastName.Should().Be(request.LastName);
-
         }
 
         [Fact]
-        public async Task GivenEditUser_UserDoesNotExists_ReturnNotFOund()
+        public async Task GivenEditUser_UserDoesNotExists_ReturnNotFound()
         {
             var factoryWithMockService = GetFactoryWithMockService();
             var client = factoryWithMockService.CreateClient();
-            using var scope = factoryWithMockService.Services.CreateScope();
             var request = new EditUserRequest()
             {
                 Birthdate = new DateTime(1987, 01, 01),
@@ -64,7 +63,6 @@ namespace UsersApi.Test.User
         {
             var factoryWithMockService = GetFactoryWithMockService();
             var client = factoryWithMockService.CreateClient();
-            using var scope = factoryWithMockService.Services.CreateScope();
             var request = new EditUserRequest()
             {
                 Birthdate = new DateTime(1987, 01, 01),

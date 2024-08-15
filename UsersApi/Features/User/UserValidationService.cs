@@ -1,6 +1,4 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UsersApi.Features.User
 {

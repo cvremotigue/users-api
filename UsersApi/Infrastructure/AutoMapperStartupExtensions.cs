@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using UsersApi.Core.Entities;
+using UsersApi.Features.RunningActivity;
 using UsersApi.Features.User;
 
 namespace UsersApi.Infrastructure
@@ -7,9 +9,12 @@ namespace UsersApi.Infrastructure
     {
         public AutoMapperStartupExtensions()
         {
-            CreateMap<Core.Entities.Users, UserDetails>().ReverseMap();
-            CreateMap<Core.Entities.Users, CreateUserRequest>().ReverseMap();
-            CreateMap<Core.Entities.Users, EditUserRequest>().ReverseMap();
+            CreateMap<Users, UserDetails>().ReverseMap();
+            CreateMap<Users, CreateUserRequest>().ReverseMap();
+            CreateMap<Users, EditUserRequest>().ReverseMap();
+            CreateMap<RunningActivities, RunningActivityDetails>().ReverseMap();
+            CreateMap<RunningActivities, CreateRunningActivityRequest>().ReverseMap();
+            CreateMap<RunningActivities, EditRunningActivityRequest>().ReverseMap();
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using UsersApi.Data.Contexts;
+﻿using UsersApi.Core.Entities;
+using UsersApi.Data.Contexts;
+using UsersApi.Features.RunningActivity;
 
 namespace UsersApi
 {
@@ -27,10 +29,31 @@ namespace UsersApi
             return user.Id;
         }
 
+        public int SeedRunningActivity(Guid id)
+        {
+            var request = new Core.Entities.RunningActivities()
+            {
+                Distance = 5,
+                StartDate = DateTime.UtcNow.AddHours(-1),
+                EndDate = DateTime.UtcNow,
+                Location = "location",
+                UserId = id
+            };
+
+            _dataContext.Add(request);
+            _dataContext.SaveChanges();
+            return request.Id;
+        }
+
         public void Cleanup()
         {
+            foreach (var entity in _dataContext.RunningActivities)
+                _dataContext.RunningActivities.Remove(entity);
+            
+
             foreach (var entity in _dataContext.Users)
                 _dataContext.Users.Remove(entity);
+
             _dataContext.SaveChanges();
         }
     }

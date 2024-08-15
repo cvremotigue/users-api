@@ -21,8 +21,11 @@ namespace UsersApi
             services.AddScoped<UserService>();
             services.AddScoped<RunningActivityService>();
             services.AddScoped<UserValidationService>();
+            services.AddScoped<RunningActivityValidationService>();
             services.AddScoped<IValidator<CreateUserRequest>, CreateUserValidator>();
             services.AddScoped<IValidator<EditUserRequest>, EditUserValidator>();
+            services.AddScoped<IValidator<CreateRunningActivityRequest>, CreateRunningActivityValidator>();
+            services.AddScoped<IValidator<EditRunningActivityRequest>, EditRunningActivityValidator>();
             services.AddScoped<DataSeeder>();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
