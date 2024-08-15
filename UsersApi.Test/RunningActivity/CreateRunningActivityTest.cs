@@ -1,19 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using UsersApi.Features.User;
-using UsersApi.Features.RunningActivity;
-using Microsoft.EntityFrameworkCore;
-using UsersApi.Data.Contexts;
-using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System.Net;
+using System.Net.Http.Json;
+using UsersApi.Data.Contexts;
+using UsersApi.Features.RunningActivity;
 
 namespace UsersApi.Test.RunningActivity
 {

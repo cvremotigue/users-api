@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -65,7 +66,7 @@ namespace UsersApi.Test.User
             var client = factoryWithMockService.CreateClient();
             var request = new EditUserRequest()
             {
-                Birthdate = new DateTime(1987, 01, 01),
+                Birthdate = DateTimeOffset.UtcNow,
                 FirstName = " Updated First name",
                 LastName = "Updated Last name",
                 Height = 0,
@@ -75,6 +76,11 @@ namespace UsersApi.Test.User
             var response = await client.PutAsJsonAsync($"user/{new Guid()}", request);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+            var result = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            result!.Extensions["errors"]!.ToString().Should().Contain("Invalid birth date.");
+            result!.Extensions["errors"]!.ToString().Should().Contain("Invalid weight.");
+            result!.Extensions["errors"]!.ToString().Should().Contain("Invalid height.");
         }
 
         private WebApplicationFactory<Program> GetFactoryWithMockService()

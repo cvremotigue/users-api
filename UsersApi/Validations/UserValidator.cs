@@ -15,9 +15,9 @@ namespace UsersApi.Validations
                 .NotEmpty()
                 .WithMessage("Last name is required.");
 
-            RuleFor(user => user.Birthdate)
-                .LessThan(DateTimeOffset.UtcNow)
-                .WithMessage("Invalid birth date");
+            RuleFor(user => user.Birthdate.Date)
+                .LessThan(DateTimeOffset.UtcNow.Date)
+                .WithMessage("Invalid birth date.");
 
             RuleFor(user => user.Weight)
                 .NotEqual(0)
@@ -41,9 +41,9 @@ namespace UsersApi.Validations
                 .NotEmpty()
                 .WithMessage("Last name is required.");
 
-            RuleFor(user => user.Birthdate)
-                .LessThan(DateTimeOffset.UtcNow)
-                .WithMessage("Invalid birth date");
+            RuleFor(user => user.Birthdate.Date)
+               .LessThan(DateTimeOffset.UtcNow.Date)
+               .WithMessage("Invalid birth date.");
 
             RuleFor(user => user.Weight)
                 .NotEqual(0)

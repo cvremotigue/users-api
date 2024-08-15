@@ -18,7 +18,7 @@ namespace UsersApi.Test.User
             var client = factory.CreateClient();
             var request = new CreateUserRequest()
             {
-                Birthdate = new DateTime(1987, 01, 01),
+                Birthdate = DateTimeOffset.UtcNow,
                 FirstName = "First name",
                 LastName = "Last name",
                 Height = 0,
@@ -26,9 +26,12 @@ namespace UsersApi.Test.User
             };
 
             var response = await client.PostAsJsonAsync("user", request);
+
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            var result = await response.Content.ReadAsStringAsync();
-            result.Should().NotBeNullOrEmpty();
+            var result = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            result!.Extensions["errors"]!.ToString().Should().Contain("Invalid birth date.");
+            result!.Extensions["errors"]!.ToString().Should().Contain("Invalid weight.");
+            result!.Extensions["errors"]!.ToString().Should().Contain("Invalid height.");
         }
 
         [Fact]
