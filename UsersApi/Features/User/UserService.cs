@@ -11,11 +11,13 @@ namespace UsersApi.Features.User
         private readonly UserDbContext _context;
         private readonly IMapper _mapper;
         private readonly UserValidationService _userValidationService;
-        public UserService(UserDbContext context, IMapper mapper, UserValidationService userValidationService)
+        private readonly Serilog.ILogger _logger;
+        public UserService(UserDbContext context, IMapper mapper, UserValidationService userValidationService, Serilog.ILogger logger)
         {
             _context = context;
             _mapper = mapper;
             _userValidationService = userValidationService;
+            _logger = logger;
         }
 
         public async Task<Guid> CreateUser(CreateUserRequest request)
@@ -24,6 +26,7 @@ namespace UsersApi.Features.User
 
             if (isValid is false)
             {
+                _logger.Error(errorMessage);
                 throw new InvalidParameterException(nameof(CreateUser), errorMessage);
             }
 
@@ -43,6 +46,7 @@ namespace UsersApi.Features.User
 
             if (user is null)
             {
+                _logger.Error("Record not found.");
                 throw new RecordNotFoundException("User", "Record not found.");
             }
 
@@ -63,6 +67,7 @@ namespace UsersApi.Features.User
 
             if (user is null)
             {
+                _logger.Error("Record not found.");
                 throw new RecordNotFoundException("User", "Record not found.");
             }
 
@@ -78,6 +83,7 @@ namespace UsersApi.Features.User
 
             if (isValid is false)
             {
+                _logger.Error(errorMessage);
                 throw new InvalidParameterException(nameof(EditUser), errorMessage);
             }
 
@@ -86,6 +92,7 @@ namespace UsersApi.Features.User
 
             if (user is null)
             {
+                _logger.Error("Record not found.");
                 throw new RecordNotFoundException("User", "Record not found.");
             }
 

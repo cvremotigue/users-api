@@ -12,12 +12,14 @@ namespace UsersApi.Features.RunningActivity
         private readonly UserDbContext _context;
         private readonly IMapper _mapper;
         private readonly RunningActivityValidationService _validationService;
+        private readonly Serilog.ILogger _logger;
 
-        public RunningActivityService(UserDbContext context, IMapper mapper, RunningActivityValidationService validationService)
+        public RunningActivityService(UserDbContext context, IMapper mapper, RunningActivityValidationService validationService, Serilog.ILogger logger)
         {
             _context = context;
             _mapper = mapper;
             _validationService = validationService;
+            _logger = logger;
         }
 
         public async Task<int> CreateRunningActivity(CreateRunningActivityRequest request)
@@ -26,6 +28,7 @@ namespace UsersApi.Features.RunningActivity
 
             if (isValid is false)
             {
+                _logger.Error(errorMessage);
                 throw new InvalidParameterException(nameof(CreateRunningActivity), errorMessage);
             }
 
@@ -50,6 +53,7 @@ namespace UsersApi.Features.RunningActivity
 
             if (activity is null)
             {
+                _logger.Error("Record not found.");
                 throw new RecordNotFoundException("RunningActivity", "Record not found.");
             }
 
@@ -63,6 +67,7 @@ namespace UsersApi.Features.RunningActivity
 
             if (isValid is false)
             {
+                _logger.Error(errorMessage);
                 throw new InvalidParameterException(nameof(CreateRunningActivity), errorMessage);
             }
 
@@ -71,6 +76,7 @@ namespace UsersApi.Features.RunningActivity
 
             if (activity is null)
             {
+                _logger.Error("Record not found.");
                 throw new RecordNotFoundException("RunningActivity", "Record not found.");
             }
 

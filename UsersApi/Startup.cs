@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Serilog;
 using UsersApi.Features.RunningActivity;
 using UsersApi.Features.User;
 using UsersApi.Infrastructure;
@@ -17,6 +18,7 @@ namespace UsersApi
 
         public void ConfigureService(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(AutoMapperStartupExtensions));
             services.AddDataAccess(Configuration);
             services.AddScoped<UserService>();
             services.AddScoped<RunningActivityService>();
@@ -42,6 +44,10 @@ namespace UsersApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            
+
+            app.UseSerilogRequestLogging();
 
             app.UseHttpsRedirection();
 
